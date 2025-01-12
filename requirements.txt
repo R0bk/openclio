@@ -1,0 +1,18 @@
+# Embedding & ML
+sentence-transformers
+umap-learn
+scikit-learn
+
+# LLM API
+openai
+
+# Utilities
+python-dotenv
+tqdm
+tenacity
+aiolimiter
+diskcache
+numpy
+pandas
+openpyxl
+aiohttp
