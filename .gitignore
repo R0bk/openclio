@@ -36,6 +36,4 @@ prior_runs
 cluster-viewer/public/analysis_results*
 
 conversations.xlsx
-facets.json
-analysis_results.csv
-initial_findings.txt
+clio_paper.pdf

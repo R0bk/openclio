@@ -54,26 +54,6 @@ const DetailValue = styled.div`
   line-height: 1.4;
 `;
 
-const DetailText = styled.div`
-  color: #999;
-  font-size: 0.9em;
-  line-height: 1.6;
-  margin-top: 12px;
-`;
-
-const StatsSection = styled.div`
-  margin-top: 24px;
-  display: grid;
-  grid-template-columns: auto auto;
-  gap: 8px;
-  color: #999;
-  font-size: 0.9em;
-`;
-
-const StatLabel = styled.div`
-  color: #666;
-`;
-
 const StyledClusterNode = styled.div<{ level: number; selected: boolean; hasChildren: boolean }>`
   margin-left: ${props => props.level * 24}px;
   padding: 4px 12px;
@@ -120,13 +100,6 @@ const ParentCluster = styled.div`
   margin-bottom: 2px;
 `;
 
-const Description = styled.div`
-  color: #888;
-  font-size: 0.9em;
-  margin-top: 2px;
-  line-height: 1.4;
-`;
-
 const ToggleButton = styled.button`
   background: none;
   border: none;
@@ -143,24 +116,6 @@ const ToggleButton = styled.button`
   &:hover {
     color: #888;
   }
-`;
-
-const ClusterInfo = styled.div`
-  flex: 1;
-`;
-
-const ParentInfo = styled.div`
-  font-style: italic;
-  color: #888;
-  font-size: 0.9em;
-  margin-bottom: 4px;
-`;
-
-const ClusterDescription = styled.div`
-  color: #888;
-  font-size: 0.9em;
-  margin-top: 4px;
-  line-height: 1.4;
 `;
 
 const ClusterNodeComponent: React.FC<ClusterNodeProps> = ({

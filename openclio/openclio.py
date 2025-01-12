@@ -13,10 +13,8 @@ Main components:
 import asyncio
 import logging
 import re
-import time
 from dataclasses import dataclass
 from itertools import chain
-from pathlib import Path
 from random import sample, shuffle
 from typing import Literal
 
@@ -564,23 +562,10 @@ class ClioSystem:
             facet_criteria=TASK_FACET_CRITERIA # This is only for task facet clustering
         )
         
-        # Create dedupe directory if it doesn't exist
-        dedupe_dir = Path("./tmp/dedupe")
-        dedupe_dir.mkdir(parents=True, exist_ok=True)
-        
-        # Generate unique timestamp for this deduplication
-        timestamp = int(time.time() * 1000)
-        
-        # Save prompt to file
-        (dedupe_dir / f"prompt_{timestamp}.txt").write_text(prompt)
-        
         # Get Claude response
         messages = split_prompt_into_conversation(prompt)
         response = await llm(messages, temperature=1.0)
-        
-        # Save response to file
-        (dedupe_dir / f"response_{timestamp}.txt").write_text(response)
-        
+                
         # Extract deduplicated cluster names
         answer_match = re.search(r"<answer>(.*?)</answer>", response, re.DOTALL)
         if not answer_match:
@@ -594,10 +579,7 @@ class ClioSystem:
                 # Extract name after number (e.g., "1. Debug Python code" -> "Debug Python code")
                 if match := re.match(r'\d+\.\s*(.*)', line.strip()):
                     dedup_names.append(match.group(1))
-        
-        # Save final deduped names to file
-        (dedupe_dir / f"results_{timestamp}.txt").write_text("\n".join(dedup_names))
-        
+                
         if not dedup_names:
             logger.warning("No deduplicated names found in response")
             return clusters

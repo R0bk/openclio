@@ -68,13 +68,6 @@ npm run dev
 ```
 4. Open your browser to the URL shown in the terminal (typically http://localhost:5173)
 
-## Key Features
-
-- **Privacy First**: Enforces minimum cluster sizes and other privacy protections
-- **Hierarchical Organization**: Automatically builds multi-level cluster hierarchies
-- **Customizable**: Configure clustering parameters, privacy thresholds, and more
-- **Production Ready**: Built for scalability and real-world use
-
 ## Implementation Notes
 
 This implementation differs from the original paper in a few ways:
