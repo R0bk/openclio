@@ -19,6 +19,7 @@ from random import sample, shuffle
 from typing import Literal
 
 import numpy as np
+from tqdm.asyncio import tqdm
 from sklearn.cluster import KMeans
 from llm import embed, llm, split_prompt_into_conversation
 from models import Cluster, Conversation, ConversationTurn, MetadataDict
@@ -48,7 +49,7 @@ class FacetConfig:
     prompt: str | None = None
     prefill: str = ""
     
-
+ids = [0, 0, 0, 0, 0]
 class FacetExtractor:
     """Enhanced facet extractor with privacy protection and multilingual support"""
     
@@ -125,7 +126,8 @@ class FacetExtractor:
         )
         
         # Extract each facet
-        for facet in facets_to_extract:
+        for j, facet in enumerate(facets_to_extract):
+            ids[j] += 1
             try:
                 if facet.type == "direct":
 
@@ -142,6 +144,7 @@ class FacetExtractor:
                 logger.error(f"Failed to extract {facet.name}: {e}")
                 results[facet.name] = None
                 raise e
+        ids[4] += 1
         
         conv.metadata = results
         return conv
@@ -168,7 +171,7 @@ class ClioSystem:
         Args: conversation: Input conversation
         Returns: Dictionary of extracted facets
         """
-        return await asyncio.gather(*[
+        return await tqdm.gather(*[
             self.facet_extractor.extract_facets(c) for c in conversations
         ])
         
@@ -184,6 +187,10 @@ class ClioSystem:
         
         # Embed text facets
         task_embeddings = await embed(tasks)        # Shape: (n_convs, n_embed)
+
+        # Store embeddings in conversation metadata
+        for conv, emb in zip(conversations, task_embeddings):
+            conv.metadata['embedding'] = emb
         return task_embeddings
         request_embeddings = await embed(requests)  # Shape: (n_convs, n_embed)
         

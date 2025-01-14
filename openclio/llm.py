@@ -17,9 +17,10 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Initialize rate limiter and cache
-rate_limit = AsyncLimiter(10, 5)
+rate_limit = AsyncLimiter(30, 5)
+rate_limit = AsyncLimiter(5, 5)
 embed_rate_limit = AsyncLimiter(100, 60)
-cache = Cache("./cache")
+cache = Cache("./cache", size_limit=2**32)
 
 # Initialize OpenAI client
 client = AsyncOpenAI()

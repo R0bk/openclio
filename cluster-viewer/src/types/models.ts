@@ -22,6 +22,7 @@ export interface ClusterBase {
 export interface Cluster extends ClusterBase {
     child_clusters?: Cluster[];
     conversation_ids?: ConversationId[];
+    projection?: Projection;
 }
 
 export interface ClusterAnalysis {
@@ -33,4 +34,35 @@ export interface ClusterAnalysis {
     hierarchy: {
         clusters: Cluster[];
     };
+    conversations: {
+        [key: ConversationId]: Conversation;
+    };
+}
+
+export interface Projection {
+    x: number;
+    y: number;
+}
+
+export interface ConversationMetadata {
+    projection?: Projection;
+    // ... other metadata fields
+}
+
+export interface Conversation {
+    id: ConversationId;
+    // cluster_id: ClusterId;
+    // summary?: string;
+    metadata: ConversationMetadata;
+}
+
+// Helper type for the tree view
+export interface ClusterHierarchy {
+    clusters: Cluster[];
+}
+
+// Helper type for views that need both hierarchy and conversations
+export interface ViewData {
+    hierarchy: ClusterHierarchy;
+    conversations: Conversation[];
 } 

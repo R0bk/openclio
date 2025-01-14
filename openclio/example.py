@@ -11,17 +11,20 @@ import json
 import random
 from datetime import datetime
 from json import JSONEncoder
-from .openclio import Cluster, ClioSystem
+from openclio import Cluster, ClioSystem
 from projector import Projector
+import numpy as np
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class DateTimeEncoder(JSONEncoder):
-    """Custom JSON encoder for datetime objects"""
+    """Custom JSON encoder for datetime objects and numpy arrays"""
     def default(self, obj):
         if isinstance(obj, datetime):
             return obj.isoformat()
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
         return super().default(obj)
 
 def print_cluster(cluster: Cluster, prefix=""):
@@ -72,7 +75,7 @@ async def process_conversations(input_file: Path, output_file: Path):
     else:
         logger.warning("No clusters were created")
 
-    proj_metadata = Projector().project(conversations, top_clusters)
+    proj_metadata = Projector().project(conversation_slice, top_clusters)
     
     # Generate analysis JSON
     analysis = {
@@ -87,7 +90,7 @@ async def process_conversations(input_file: Path, output_file: Path):
             'clusters': [cluster.to_dict() for cluster in top_clusters]
         },
         'conversations': {
-            conv.id: conv.to_dict() for conv in conversations
+            conv.id: conv.to_dict() for conv in conversation_slice
         }
     }
     

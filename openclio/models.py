@@ -59,7 +59,7 @@ class Conversation:
         return {
             'id': self.id,
             'turns': [{'role': t.role, 'content': t.content} for t in self.turns],
-            'metadata': self.metadata
+            'metadata': {k:v for k,v in self.metadata.items() if k != 'embedding'}
         }
 
 @dataclass 

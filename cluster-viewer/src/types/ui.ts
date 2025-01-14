@@ -1,14 +1,20 @@
-import { ClusterAnalysis, Cluster } from './models';
+import { Cluster } from './models';
 
 export interface ClusterNodeProps {
     cluster: Cluster;
     level: number;
     expandedNodes: Set<string>;
-    toggleNode: (clusterId: string) => void;
+    toggleNode: (id: string) => void;
     selectedCluster?: string;
-    onSelect: (clusterId: string) => void;
+    onSelectCluster: (cluster: Cluster | null) => void;
 }
 
 export interface ClusterTreeProps {
-    data: ClusterAnalysis;
-} 
+    data: {
+      hierarchy: {
+        clusters: Cluster[];
+      };
+    };
+    selectedCluster?: string;
+    onSelectCluster: (cluster: Cluster | null) => void;
+}

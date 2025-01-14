@@ -1,23 +1,21 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ClusterTree } from './components/ClusterTree';
+import { PlotView } from './components/PlotView';
+import { Sidebar } from './components/Sidebar';
 import type { Cluster, ClusterAnalysis } from './types/models';
 
 const AppContainer = styled.div`
+  display: flex;
   background-color: #1e1e1e;
   min-height: 100vh;
   color: #fff;
 `;
 
-const Header = styled.header`
-  padding: 20px;
-  border-bottom: 1px solid #333;
-`;
-
-const Title = styled.h1`
-  margin: 0;
-  font-size: 1.2em;
-  color: #ccc;
+const MainContent = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 `;
 
 const LoadingState = styled.div`
@@ -36,10 +34,37 @@ const ErrorState = styled.div`
   color: #ff6b6b;
 `;
 
+const ViewToggle = styled.div`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  z-index: 1000;
+`;
+
+const ToggleButton = styled.button<{ active: boolean }>`
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: none;
+  background: ${props => props.active ? '#666' : '#333'};
+  color: ${props => props.active ? '#fff' : '#ccc'};
+  cursor: pointer;
+  font-size: 14px;
+  
+  &:hover {
+    background: ${props => props.active ? '#666' : '#444'};
+  }
+`;
+
+type ViewType = 'tree' | 'plot';
+
 function App() {
   const [data, setData] = useState<ClusterAnalysis | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [currentView, setCurrentView] = useState<ViewType>('tree');
+  const [selectedCluster, setSelectedCluster] = useState<Cluster | null>(null);
 
   useEffect(() => {
     async function loadData() {
@@ -78,22 +103,59 @@ function App() {
 
   return (
     <AppContainer>
-      <Header>
-        <Title>Color and sort: Clusters, sorted by size</Title>
-      </Header>
-      
-      {loading && (
-        <LoadingState>Loading cluster data...</LoadingState>
+      {data && (
+        <Sidebar 
+          selectedCluster={selectedCluster} 
+          onClearSelection={() => setSelectedCluster(null)} 
+        />
       )}
-      
-      {error && (
-        <ErrorState>
-          <h3>Error Loading Data</h3>
-          <p>{error}</p>
-        </ErrorState>
-      )}
-      
-      {data && <ClusterTree data={data} />}
+      <MainContent>
+        {loading && (
+          <LoadingState>Loading cluster data...</LoadingState>
+        )}
+        
+        {error && (
+          <ErrorState>
+            <h3>Error Loading Data</h3>
+            <p>{error}</p>
+          </ErrorState>
+        )}
+        
+        {data && (
+          <>
+            {currentView === 'tree' && (
+              <ClusterTree 
+                data={data} 
+                selectedCluster={selectedCluster?.id}
+                onSelectCluster={setSelectedCluster}
+              />
+            )}
+            {currentView === 'plot' && (
+              <PlotView 
+                conversations={data.conversations} 
+                clusters={data.hierarchy.clusters}
+                selectedCluster={selectedCluster?.id}
+                onSelectCluster={setSelectedCluster}
+              />
+            )}
+            
+            <ViewToggle>
+              <ToggleButton
+                active={currentView === 'tree'}
+                onClick={() => setCurrentView('tree')}
+              >
+                Tree View
+              </ToggleButton>
+              <ToggleButton
+                active={currentView === 'plot'}
+                onClick={() => setCurrentView('plot')}
+              >
+                Map View
+              </ToggleButton>
+            </ViewToggle>
+          </>
+        )}
+      </MainContent>
     </AppContainer>
   );
 }
