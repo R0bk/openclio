@@ -482,13 +482,11 @@ class ClioSystem:
         sample_convos = sample(cluster_convos, 50) if len(cluster_convos) > 50 else cluster_convos
         
         # Get cluster centroid
-        cluster_embeddings = embeddings[cluster_indices]
-        centroid = np.mean(cluster_embeddings, axis=0)
+        centroid = np.mean(embeddings[cluster_indices], axis=0)
         
         # Calculate distances to centroid for non-cluster conversations
         non_cluster_indices = np.array([i for i in range(len(all_convos)) if i not in cluster_indices])
-        non_cluster_embeddings = embeddings[non_cluster_indices]
-        distances = np.linalg.norm(non_cluster_embeddings - centroid, axis=1)
+        distances = np.linalg.norm(embeddings[non_cluster_indices] - centroid, axis=1)
         
         # Get 50 nearest neighbors not in cluster
         k = min(50, len(non_cluster_indices))
@@ -496,8 +494,8 @@ class ClioSystem:
         contrast_convos = [all_convos[non_cluster_indices[i]] for i in nearest_indices]
         
         # Format conversation summaries
-        sample_summaries = [f"{conv.metadata['request']}" for conv in sample_convos]
-        contrast_summaries = [f"{conv.metadata['request']}" for conv in contrast_convos]
+        sample_summaries = [f"{conv.metadata['task']}" for conv in sample_convos]
+        contrast_summaries = [f"{conv.metadata['task']}" for conv in contrast_convos]
         
         # Build prompt
         prompt = CLUSTER_LABELING_PROMPT.format(
