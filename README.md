@@ -68,6 +68,10 @@ npm run dev
 ```
 4. Open your browser to the URL shown in the terminal (typically http://localhost:5173)
 
+The cluster viewer provides both a hierarchical tree view and an interactive map view of your clusters:
+
+![Cluster Viewer UI](ui.gif)
+
 ## Implementation Notes
 
 This implementation differs from the original paper in a few ways:
