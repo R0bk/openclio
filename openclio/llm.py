@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 rate_limit = AsyncLimiter(30, 5)
 rate_limit = AsyncLimiter(5, 5)
 embed_rate_limit = AsyncLimiter(100, 60)
-cache = Cache("./cache", size_limit=2**32)
+cache = Cache("./cache", size_limit=2**34)
 
 # Initialize OpenAI client
 client = AsyncOpenAI()
