@@ -5,6 +5,8 @@ An open source implementation of Anthropic's [Clio system](https://arxiv.org/abs
 
 ## Overview
 
+![Cluster Viewer UI](ui.gif)
+
 OpenClio helps you analyze large collections of AI conversations while preserving user privacy. It:
 
 1. 🔍 Extracts key facets from conversations (tasks, requests, etc.)
@@ -69,8 +71,6 @@ npm run dev
 4. Open your browser to the URL shown in the terminal (typically http://localhost:5173)
 
 The cluster viewer provides both a hierarchical tree view and an interactive map view of your clusters:
-
-![Cluster Viewer UI](ui.gif)
 
 ## Implementation Notes
 
